@@ -13,6 +13,8 @@ from version import VERSION, NAME as PLUGIN_NAME
 
 __version__ = VERSION
 
+EDSM_CALLBACK_SEQUENCE = '<<EDSMCallback>>'
+
 LOG_CRIT = 1
 LOG_ERROR = 2
 LOG_WARN = 3
@@ -211,7 +213,7 @@ class EDSMQueries(object):
 
             if reply:
                 self.resultQueue.append((request, reply))
-                self.callbackWidget.event_generate('<<EDSMCallback>>', when='tail')
+                self.callbackWidget.event_generate(EDSM_CALLBACK_SEQUENCE, when='tail')
             else:
                 self._log(LOG_ERROR, "Unable to perform request {api}/{endpoint}".format(api=api, endpoint=endpoint))
 

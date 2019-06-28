@@ -3,11 +3,13 @@
 import sys
 from pprint import pformat
 
+# EDMarketConnector Core
 import plug
+from monitor import monitor
 
+# EDSMQuery
 from version import VERSION, NAME as PLUGIN_NAME
-import edsmquery
-from edsmquery import LOG_DEBUG, LOG_INFO
+from edsmquery import LOG_DEBUG, LOG_INFO, EDSM_QUERIES, EDSM_CALLBACK_SEQUENCE, log as edsmquery_log
 
 this = sys.modules[__name__]  # For holding module globals
 
@@ -21,7 +23,7 @@ def log(level, message):
     :param level: Log level of the message
     :param message: The message to print
     """
-    edsmquery.log(LOG_LEVEL, level, LOG_PREFIX, message)
+    edsmquery_log(LOG_LEVEL, level, LOG_PREFIX, message)
 
 
 def plugin_start():
@@ -31,9 +33,10 @@ def plugin_start():
     # . . .,---.,---.|__/ ,---.,---.
     # | | ||   ||    |  \ |---'|
     # `-'-'`---'`    `   ``---'`
-    this.edsmQueries = edsmquery.EDSM_QUERIES
+    this.lastEDSMScan = None
+    this.edsmQueries = EDSM_QUERIES
 
-    print("Loaded {name} (v{version}).".format(name=PLUGIN_NAME, version=VERSION))
+    log(LOG_INFO, "{name} (v{version}) initialized.".format(name=PLUGIN_NAME, version=VERSION))
     return PLUGIN_NAME
 
 
@@ -44,16 +47,17 @@ def plugin_stop():
 
 
 def plugin_app(parent):
-    """
-    Initialize our frame to display our matches.
-
-    We do not return it because that kinda messes with how EDMC handles
-    frames from plugins. It is lazy loaded later on.
-    """
-
-    parent.bind('<<EDSMCallback>>', _edsm_callback_received)
+    """Configure the EDSMQuerier callbacks."""
     this.edsmQueries.callbackWidget = parent
+    # Bind to events thrown by edsmquery
+    parent.bind(EDSM_CALLBACK_SEQUENCE, _edsm_callback_received)
     # this.edsmQueries.start(parent)
+
+
+def plugin_prefs(_parent, _cmdr, _is_beta):
+    """Return a Tk Frame for adding to the EDMC settings dialog."""
+
+    pass
 
 
 def _edsm_callback_received(_event=None):
