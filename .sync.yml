@@ -1,0 +1,4 @@
+.pylintrc:
+  ignored-modules:
+    - 'plug'
+    - 'monitor'
