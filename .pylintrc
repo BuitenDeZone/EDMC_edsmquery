@@ -330,10 +330,10 @@ ignored-classes=thread._local,_thread._local
 # supports qualified module names, as well as Unix pattern matching.
 # ignoring EDMC built ins by default.
 ignored-modules=config,
-                myNotebooktheme,
+                myNotebook,
+                plug,
+                monitor,
                 l10n
-
-
 
 # Show a hint with possible names when a member name was not found. The aspect
 # of finding the hint is based on edit distance.
