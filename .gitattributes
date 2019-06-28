@@ -15,3 +15,4 @@ requirements.txt export-ignore
 .github/ export-ignore
 .idea/ export-ignore
 *.iml export-ignore
+.sync.yml export-ignore
