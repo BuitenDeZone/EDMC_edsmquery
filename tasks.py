@@ -26,7 +26,7 @@ def lint(ctx, filename=None, envdir=['env', 'venv'], noglob=False):
     :param noglob: Disable globbing in the filename.
     """
 
-    excludes = ['.git']
+    excludes = ['.git', 'env', 'venv']
     if isinstance(envdir, str):
         excludes.append(str)
     else:
