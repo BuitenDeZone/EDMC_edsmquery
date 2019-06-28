@@ -1,3 +1,16 @@
+# Python
+*.pyc
+*.pyo
+__pycache__/
+env/
+venv/
+.env
+.venv
+
+# Release
+out/
+
+# Repository specific paths:
 # IDEs
 ## IntelliJ and related
 # User-specific stuff
@@ -10,20 +23,8 @@
 # Generated files
 .idea/**/contentModel.xml
 
-
+# Visual Studio
 .vs/
 *.pyproj
 *.pyproj.user
 *.sln
-
-# Python
-*.pyc
-*.pyo
-__pycache__/
-env/
-venv/
-.env
-.venv
-
-# Release
-out/

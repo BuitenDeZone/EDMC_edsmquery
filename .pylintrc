@@ -285,7 +285,7 @@ max-spelling-suggestions=4
 spelling-dict=
 
 # List of comma separated words that should not be checked.
-spelling-ignore-words=materializer, EDMC
+spelling-ignore-words=EDMC
 
 # A path to a file that contains private dictionary; one word per line.
 spelling-private-dict-file=
@@ -328,7 +328,12 @@ ignored-classes=thread._local,_thread._local
 # (useful for modules/projects where namespaces are manipulated during runtime
 # and thus existing member attributes cannot be deduced by static analysis. It
 # supports qualified module names, as well as Unix pattern matching.
-ignored-modules=config, l10n, theme, myNotebook, monitor, plug
+# ignoring EDMC built ins by default.
+ignored-modules=config,
+                myNotebooktheme,
+                l10n
+
+
 
 # Show a hint with possible names when a member name was not found. The aspect
 # of finding the hint is based on edit distance.
