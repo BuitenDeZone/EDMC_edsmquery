@@ -8,8 +8,10 @@ import plug
 from monitor import monitor
 
 # EDSMQuery
+# ignore the relative imports here. Without them, my IDE does not like these references.
 from version import VERSION
-from edsmquery.edsmquery import LOG_DEBUG, LOG_INFO, EDSM_QUERIES, EDSM_CALLBACK_SEQUENCE, log as edsmquery_log
+from edsmquery import LOG_DEBUG, LOG_INFO, log as edsmquery_log
+from edsmquery import EDSM_QUERIES, EDSM_CALLBACK_SEQUENCE
 
 this = sys.modules[__name__]  # For holding module globals
 
