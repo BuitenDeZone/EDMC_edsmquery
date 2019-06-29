@@ -8,13 +8,13 @@ import plug
 from monitor import monitor
 
 # EDSMQuery
-from version import VERSION, NAME as PLUGIN_NAME
-from edsmquery import LOG_DEBUG, LOG_INFO, EDSM_QUERIES, EDSM_CALLBACK_SEQUENCE, log as edsmquery_log
+from version import VERSION
+from edsmquery.edsmquery import LOG_DEBUG, LOG_INFO, EDSM_QUERIES, EDSM_CALLBACK_SEQUENCE, log as edsmquery_log
 
 this = sys.modules[__name__]  # For holding module globals
 
 LOG_LEVEL = LOG_INFO
-LOG_PREFIX = "{plugin_name} load > ".format(plugin_name=PLUGIN_NAME)
+LOG_PREFIX = "edsmquery: load.py > "
 
 
 def log(level, message):
@@ -36,8 +36,10 @@ def plugin_start():
     this.lastEDSMScan = None
     this.edsmQueries = EDSM_QUERIES
 
-    log(LOG_INFO, "{name} (v{version}) initialized.".format(name=PLUGIN_NAME, version=VERSION))
-    return PLUGIN_NAME
+    # this.updateBodies = tk.IntVar(value=)
+
+    log(LOG_INFO, "{name} (v{version}) initialized.".format(name='edsmquery', version=VERSION))
+    return 'edsmquery'
 
 
 def plugin_stop():

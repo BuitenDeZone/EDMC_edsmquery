@@ -9,7 +9,7 @@ Note: By putting this in a module, EDMC will load us sooner than other plugins.
 from Queue import Queue, Empty
 from threading import Thread, Event
 from requests import Session, HTTPError, ConnectionError
-from version import VERSION, NAME as PLUGIN_NAME
+from version import VERSION
 
 __version__ = VERSION
 
@@ -65,21 +65,21 @@ class EDSMQueries(object):
         self.thread = None
         self.session = Session()
         self.session.headers['User-Agent'] = "EDMC-Plugin-{plugin_name}/{version}".format(
-            plugin_name=PLUGIN_NAME,
+            plugin_name='edsmquery',
             version=VERSION,
         )
         self.logLevel = None
         self.logPrefix = 'EDSMQueries > '
         self.interruptEvent = Event()
         self.logLevel = LOG_INFO
-        self.logPrefix = "{plugin_name} > ".format(plugin_name=PLUGIN_NAME)
+        self.logPrefix = "edsmquery > "
 
     def _log(self, level, message):
         log(self.logLevel, level, self.logPrefix, message)
 
     def _init_thread(self):
         if self.thread is None:
-            self.thread = Thread(target=self.worker, name='{plugin_name} worker'.format(plugin_name=PLUGIN_NAME))
+            self.thread = Thread(target=self.worker, name='edsmquery worker')
             self.thread.daemon = True
         return self.thread
 
@@ -95,7 +95,7 @@ class EDSMQueries(object):
             self.callbackWidget = callback_widget
 
         if self.callbackWidget is None:
-            log(LOG_ERROR, "Callback widget must be set before starting the thread!")
+            self._log(LOG_ERROR, "Callback widget must be set before starting the thread!")
             return False
 
         # ensure we start with a clear queue after enabling/disabling.
@@ -127,7 +127,7 @@ class EDSMQueries(object):
             # Send an interrupt if we have any THROTTLE waits in place.
             self.interruptEvent.set()
             self.thread.join()
-            self._log(LOG_INFO, "Stopped {plugin_name}.".format(plugin_name=PLUGIN_NAME))
+            self._log(LOG_INFO, "Stopped edsmquery.")
 
         self.thread = None
 
