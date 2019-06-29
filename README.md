@@ -15,6 +15,7 @@ def plugin_app(parent):
     """Initialize the UI."""
     # Force start or initialization of EDSMQueries
     EDSM_QUERIES.start(parent)
+    return 'PluginName'
 
 
 def edsm_querier_response(request, response):
