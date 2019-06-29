@@ -9,7 +9,9 @@ Note: By putting this in a module, EDMC will load us sooner than other plugins.
 from Queue import Queue, Empty
 from threading import Thread, Event
 from requests import Session, HTTPError, ConnectionError
+
 from version import VERSION
+
 
 __version__ = VERSION
 
@@ -91,16 +93,13 @@ class EDSMQueries(object):
         so further processing can be done on the gui mainloop.
         """
 
+        self._log(LOG_DEBUG, "Starting thread....")
         if callback_widget:
             self.callbackWidget = callback_widget
 
         if self.callbackWidget is None:
             self._log(LOG_ERROR, "Callback widget must be set before starting the thread!")
             return False
-
-        # ensure we start with a clear queue after enabling/disabling.
-        if self.queue:
-            self.queue.clear()
 
         # Reset our interrupt state
         self.interruptEvent.clear()
