@@ -10,10 +10,10 @@ from Queue import Queue, Empty
 from threading import Thread, Event
 from requests import Session, HTTPError, ConnectionError
 
-from version import VERSION
+from version import VERSION as PLUGIN_VERSION
 
 
-__version__ = VERSION
+__version__ = PLUGIN_VERSION
 
 EDSM_CALLBACK_SEQUENCE = '<<EDSMCallback>>'
 
@@ -45,7 +45,7 @@ def log(max_level, level, prefix, message):
     """
     print_level = LOG_OUTPUT.get(level, 'UNKNOWN')
     if level <= max_level:
-        print("{prefix}{level}: {message}".format(prefix=prefix, level=print_level, message=message))
+        print "{prefix}{level}: {message}".format(prefix=prefix, level=print_level, message=message)
 
 
 class EDSMQueries(object):
@@ -68,7 +68,7 @@ class EDSMQueries(object):
         self.session = Session()
         self.session.headers['User-Agent'] = "EDMC-Plugin-{plugin_name}/{version}".format(
             plugin_name='edsmquery',
-            version=VERSION,
+            version=PLUGIN_VERSION,
         )
         self.logLevel = None
         self.logPrefix = 'EDSMQueries > '
