@@ -115,3 +115,29 @@ def _edsm_callback_received(_event=None):
                     ))
                     if response is True:
                         break
+
+
+# This only gets us events from the edsm plugin
+def edsm_notify_system(reply):
+    """
+    Handle an event sent by EDMarketConnector/plugins/edsm.
+
+    When an existing system is encountered, trigger an update from EDSM.
+    :param reply:
+    """
+    log(LOG_DEBUG, "Processing edsm notify event: {event}".format(event=pformat(reply)))
+    if not reply:
+        return
+    elif reply['msgnum'] // 100 not in (1, 4):
+        return
+    elif reply.get('systemCreated'):
+        return
+    elif this.lastEDSMScan and this.lastEDSMScan == monitor.system:
+        return
+    else:
+        this.lastEDSMScan = monitor.system
+        EDSM_QUERIES.request_get(
+            EDSM_QUERIES.API_SYSTEM_V1,
+            'bodies',
+            systemName=this.lastEDSMScan,
+        )

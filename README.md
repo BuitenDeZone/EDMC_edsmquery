@@ -2,6 +2,9 @@
 
 Sends queries to EDSM. This plugin is meant to be used by other plugins.
 
+The plugin will automagically query edsm for known bodies whenever you enter
+a known system.
+
 ## Using in your plugin
 
 Make sure that edsmquery is in the EDMarketConnector's plugin folder.
@@ -72,6 +75,10 @@ def edsm_querier_response_api_system_v1(request, response):
 def edsm_querier_api_status_v1(request, response):
     pass
 ```
+
+## Todo:
+
+* Make auto query edsm when entering a known system optional (configuration).
 
 ## License
 
