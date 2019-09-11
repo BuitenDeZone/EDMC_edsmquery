@@ -1,3 +1,4 @@
+---
 .pylintrc:
   ignored-modules:
     - 'plug'
