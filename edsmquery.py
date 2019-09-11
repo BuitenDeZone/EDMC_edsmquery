@@ -54,6 +54,9 @@ class EDSMQueries(object):
     THROTTLE = 5
     API_TIMEOUT = 10
     API_BASE_URL = 'https://www.edsm.net'
+    API_COMMANDER_V1 = 'api-commander-v1'
+    API_LOGS_V1 = 'api-logs-v1'
+    API_JOURNAL_V1 = 'api-journal-v1'
     API_SYSTEM_V1 = 'api-system-v1'
     API_SYSTEMS_V1 = 'api-systems-v1'
     API_STATUS_V1 = 'api-status-v1'
