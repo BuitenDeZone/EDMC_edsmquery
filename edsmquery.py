@@ -45,7 +45,7 @@ def log(max_level, level, prefix, message):
     """
     print_level = LOG_OUTPUT.get(level, 'UNKNOWN')
     if level <= max_level:
-        print "{prefix}{level}: {message}".format(prefix=prefix, level=print_level, message=message)
+        print("{prefix}{level}: {message}".format(prefix=prefix, level=print_level, message=message))
 
 
 class EDSMQueries(object):
@@ -207,9 +207,9 @@ class EDSMQueries(object):
                 try:
                     reply = self._http_request(api, endpoint, method, request_params)
                     break
-                except ConnectionError, err:
+                except ConnectionError as err:
                     self._log(LOG_ERROR, "HTTP Connection error: {err}".format(err=err))
-                except HTTPError, err:
+                except HTTPError as err:
                     self._log(LOG_ERROR, "HTTP error occured: {err}".format(err=err))
                 retrying += 1
 
