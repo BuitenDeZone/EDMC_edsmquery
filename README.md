@@ -31,7 +31,38 @@ def edsm_querier_response(request, response):
     pass
 ```
 
+### Calling EDSM
+
+To queue a specific request, you can use the #request_get method. A number
+of 'helper' constants are also defined:
+
+```python
+
+from edsmquery import EDSM_QUERIES
+
+def perform_request():
+  EDSM_QUERIES.request_get(
+    EDSM_QUERIES.API_COMMANDER_V1,
+    'get-ranks',
+    commanderName='edsm_commander',
+  )
+
+def edsm_querier_response_api_commander_v1_get_ranks(request, response):
+  (api, endpoint, method, request_params) = request
+
+  if response:
+    verbose_explorer = response['ranksVerbose']['Explore']
+    print("You are: {}".format(verbose_explorer))
+
+```
+
+
 ## Callback parameters
+
+All callbacks are called with 2 parameters: `request` and `response`. Request being the original request that has been sent. You can use this to filter out your own queries.
+
+The response is the exact reply from edsm (parsed).
+
 ### `request`
 
 ```python
