@@ -1,0 +1,7 @@
+---
+.pylintrc:
+  ignored-modules:
+    - 'plug'
+    - 'monitor'
+  disable:
+    - 'relative-import'

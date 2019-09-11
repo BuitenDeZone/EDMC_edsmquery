@@ -1,0 +1,11 @@
+requests
+invoke==1.2.0
+# Waiting on some bug. I can't remember.
+-e git+git://github.com/PyCQA/pylint@1.9#egg=pylint
+flake8
+flake8-docstrings
+flake8-tidy-imports
+flake8-commas
+flake8-string-format
+flake8-pep3101 # Use .format <-> %
+flake8-builtins
