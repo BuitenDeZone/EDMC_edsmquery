@@ -107,10 +107,6 @@ def edsm_querier_api_status_v1(request, response):
     pass
 ```
 
-## Todo:
-
-* Make auto query edsm when entering a known system optional (configuration).
-
 ## License
 
 [GPL-3.0](https://choosealicense.com/licenses/gpl-3.0/)

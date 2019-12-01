@@ -80,7 +80,7 @@ def release(ctx, out='out', name=None, current=False):
         out=out,
         name=name,
         sep=os.path.sep,
-        file_version=file_version
+        file_version=file_version,
     )
     command = ['git', 'archive', '-v', tag,
                '--prefix', '{name}{sep}'.format(name=name, sep=os.path.sep),

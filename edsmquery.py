@@ -10,29 +10,11 @@ from Queue import Queue, Empty
 from threading import Thread, Event
 from requests import Session, HTTPError, ConnectionError
 
+from fields import LOG_INFO, LOG_OUTPUT, LOG_DEBUG, LOG_ERROR, EDSM_CALLBACK_SEQUENCE
 from version import VERSION as PLUGIN_VERSION
 
 
 __version__ = PLUGIN_VERSION
-
-EDSM_CALLBACK_SEQUENCE = '<<EDSMCallback>>'
-
-LOG_CRIT = 1
-LOG_ERROR = 2
-LOG_WARN = 3
-LOG_INFO = 4
-LOG_DEBUG = 5
-
-LOG_OUTPUT = {
-    1: "CRITICAL",
-    2: "ERROR",
-    3: "WARNING",
-    4: "INFO",
-    5: "DEBUG",
-    0: "UNKNOWN",
-}
-
-LOG_LEVEL = LOG_INFO
 
 
 def log(max_level, level, prefix, message):
@@ -45,7 +27,7 @@ def log(max_level, level, prefix, message):
     """
     print_level = LOG_OUTPUT.get(level, 'UNKNOWN')
     if level <= max_level:
-        print "{prefix}{level}: {message}".format(prefix=prefix, level=print_level, message=message)
+        print("{prefix}{level}: {message}".format(prefix=prefix, level=print_level, message=message))
 
 
 class EDSMQueries(object):
@@ -58,6 +40,8 @@ class EDSMQueries(object):
     API_LOGS_V1 = 'api-logs-v1'
     API_JOURNAL_V1 = 'api-journal-v1'
     API_SYSTEM_V1 = 'api-system-v1'
+    API_SYSTEM_V1__BODIES = 'bodies'
+
     API_SYSTEMS_V1 = 'api-systems-v1'
     API_STATUS_V1 = 'api-status-v1'
 
@@ -73,8 +57,6 @@ class EDSMQueries(object):
             plugin_name='edsmquery',
             version=PLUGIN_VERSION,
         )
-        self.logLevel = None
-        self.logPrefix = 'EDSMQueries > '
         self.interruptEvent = Event()
         self.logLevel = LOG_INFO
         self.logPrefix = "edsmquery > "
@@ -207,9 +189,9 @@ class EDSMQueries(object):
                 try:
                     reply = self._http_request(api, endpoint, method, request_params)
                     break
-                except ConnectionError, err:
+                except ConnectionError as err:
                     self._log(LOG_ERROR, "HTTP Connection error: {err}".format(err=err))
-                except HTTPError, err:
+                except HTTPError as err:
                     self._log(LOG_ERROR, "HTTP error occured: {err}".format(err=err))
                 retrying += 1
 
