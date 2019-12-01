@@ -73,8 +73,6 @@ class EDSMQueries(object):
             plugin_name='edsmquery',
             version=PLUGIN_VERSION,
         )
-        self.logLevel = None
-        self.logPrefix = 'EDSMQueries > '
         self.interruptEvent = Event()
         self.logLevel = LOG_INFO
         self.logPrefix = "edsmquery > "
