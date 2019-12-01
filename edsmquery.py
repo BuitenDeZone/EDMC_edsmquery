@@ -10,27 +10,11 @@ from Queue import Queue, Empty
 from threading import Thread, Event
 from requests import Session, HTTPError, ConnectionError
 
+from fields import LOG_INFO, LOG_OUTPUT, LOG_DEBUG, LOG_ERROR, EDSM_CALLBACK_SEQUENCE
 from version import VERSION as PLUGIN_VERSION
 
 
 __version__ = PLUGIN_VERSION
-
-EDSM_CALLBACK_SEQUENCE = '<<EDSMCallback>>'
-
-LOG_CRIT = 1
-LOG_ERROR = 2
-LOG_WARN = 3
-LOG_INFO = 4
-LOG_DEBUG = 5
-
-LOG_OUTPUT = {
-    1: "CRITICAL",
-    2: "ERROR",
-    3: "WARNING",
-    4: "INFO",
-    5: "DEBUG",
-    0: "UNKNOWN",
-}
 
 LOG_LEVEL = LOG_INFO
 
