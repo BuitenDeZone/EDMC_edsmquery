@@ -91,7 +91,8 @@ the general `edsm_querier_response` callback which gets all events.
 * `edsm_querier_response`
 
 The `api` and `endpoint` placeholders here will be replaced by the matching api and endpoint
-but with the names sanitized (dashes are replaced with underscores).
+but with the names sanitized (dashes are replaced with underscores). If your callback returns
+`True`, all remaining callbacks for this request will be skipped.
 
 ```python
 def edsm_querier_response_api_system_v1_bodies(request, response):
@@ -99,11 +100,11 @@ def edsm_querier_response_api_system_v1_bodies(request, response):
     pass
     
 def edsm_querier_response_api_system_v1(request, response):
-    # This will never be called for system/bodies calls since a more
-    # specific implementation is in place.
-    pass
+    return True
     
 def edsm_querier_api_status_v1(request, response):
+    # This will never be called for system/bodies calls since a more
+    # specific implementation is in place.
     pass
 ```
 
