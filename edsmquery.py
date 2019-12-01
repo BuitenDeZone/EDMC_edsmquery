@@ -16,8 +16,6 @@ from version import VERSION as PLUGIN_VERSION
 
 __version__ = PLUGIN_VERSION
 
-LOG_LEVEL = LOG_INFO
-
 
 def log(max_level, level, prefix, message):
     """Print a log message.
@@ -42,6 +40,8 @@ class EDSMQueries(object):
     API_LOGS_V1 = 'api-logs-v1'
     API_JOURNAL_V1 = 'api-journal-v1'
     API_SYSTEM_V1 = 'api-system-v1'
+    API_SYSTEM_V1__BODIES = 'bodies'
+
     API_SYSTEMS_V1 = 'api-systems-v1'
     API_STATUS_V1 = 'api-status-v1'
 
