@@ -40,7 +40,7 @@ def log(level, message):
     edsmquery_log(LOG_LEVEL, level, LOG_PREFIX, message)
 
 
-def plugin_start():
+def plugin_start(_plugin_dir):
     """Perform plugin initialization."""
 
     #                |
@@ -78,7 +78,7 @@ def plugin_prefs(parent, _cmdr, _is_beta):
     system_bodies_endpoint = EDSM_QUERIES.API_SYSTEM_V1__BODIES
 
     label_system_bodies_api_checkbutton = _("Disable auto EDSM system/bodies request for known systems.")
-    label_system_bodies_api_warn_text = _("Warning: The following plugins might not function correctly when disabled.")
+    label_system_bodies_api_warn_text = _("Warning: Plugins listed below may fail to work correctly.")
 
     # Todo: find plugins that DO depend on this functionality
     frame = nb.Frame(parent)
@@ -87,6 +87,7 @@ def plugin_prefs(parent, _cmdr, _is_beta):
     nb.Label(frame, text=label_system_bodies_api_warn_text, justify=tk.LEFT)\
         .grid(sticky=tk.W)
 
+    # List all plugins that use callback hooks.
     in_use_callbacks = _edsmquery_plugins_usage_callback(system_bodies_api, system_bodies_endpoint)
     if len(in_use_callbacks) > 0:
         for plugin in in_use_callbacks.keys():
@@ -97,7 +98,7 @@ def plugin_prefs(parent, _cmdr, _is_beta):
             nb.Label(frame, text=label_plugin, justify=tk.LEFT)\
                 .grid(sticky=tk.W, padx=20)
     else:
-        nb.Label(frame, text=_("No triggers found in currently installed plugins.", justify=tk.LEFT))\
+        nb.Label(frame, text=_("No triggers found in currently installed plugins."), justify=tk.LEFT)\
             .grid(sticky=tk.W, padx=20)
 
     return frame

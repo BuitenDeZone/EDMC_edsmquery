@@ -1,0 +1,13 @@
+---
+branches:
+  only:
+    - develop
+    - /^\d+\.\d+(\.\d+)?(-\S*)?$/
+
+language: python
+python:
+  - '2.7'
+  - '3.3'
+
+script:
+  - invoke lint
