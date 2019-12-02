@@ -12,7 +12,3 @@ python:
 
 script:
   - invoke lint
-
-jobs:
-  allow_failures:
-    - if: env(TRAVIS_PYTHON_VERSION) IS present AND env(TRAVIS_PYTHON_VERSION) =~ /^3/
