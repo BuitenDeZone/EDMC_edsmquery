@@ -4,10 +4,15 @@ branches:
     - develop
     - /^\d+\.\d+(\.\d+)?(-\S*)?$/
 
+dist: xenial
 language: python
 python:
   - '2.7'
-  - '3.3'
+  - '3.7'
 
 script:
   - invoke lint
+
+jobs:
+  allow_failures:
+    - if: env(TRAVIS_PYTHON_VERSION) IS present AND env(TRAVIS_PYTHON_VERSION) =~ /^3/
