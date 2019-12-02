@@ -50,7 +50,7 @@ class Application(tk.Frame):
         """
         try:
             self.queries.stop()
-            print "Bye!"
+            print("Bye!")
         finally:
             self.master.destroy()
 

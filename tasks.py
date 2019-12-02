@@ -78,8 +78,8 @@ def release(ctx, out='out', name=None, current=False):
     if current:
         reflog = check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip()
         sha = check_output(['git', 'rev-parse', '--short', 'HEAD']).strip()
-        # print "Reflog: {reflog}".format(reflog=reflog)
-        # print "Sha: {sha}".format(sha=sha)
+        # print("Reflog: {reflog}".format(reflog=reflog))
+        # print("Sha: {sha}".format(sha=sha))
         tag = 'HEAD'
         file_version = "{branchref}~{sha}".format(branchref=reflog.replace('/', '_'), sha=sha)
 
@@ -98,6 +98,6 @@ def release(ctx, out='out', name=None, current=False):
     if not os.path.isdir(out):
         os.mkdir('out')
 
-    print "Packaging ..."
+    print("Packaging ...")
     ctx.run(' '.join(command), err_stream=sys.stdout)
-    print "Output: {outfile}".format(outfile=outfile)
+    print("Output: {outfile}".format(outfile=outfile))
