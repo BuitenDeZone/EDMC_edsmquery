@@ -27,6 +27,12 @@ def lint(ctx, filename=None, envdir=['env', 'venv'], noglob=False):
     """
 
     excludes = ['.git', 'env', 'venv']
+
+    # If we are running in a virtualenv environment, ignore it.
+    virtual_env = os.getenv('VIRTUAL_ENV', None)
+    if virtual_env is not None:
+        excludes.append(virtual_env)
+
     if isinstance(envdir, str):
         excludes.append(str)
     else:
