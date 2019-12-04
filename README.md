@@ -5,6 +5,11 @@ Sends queries to EDSM. This plugin is meant to be used by other plugins.
 The plugin will automagically query edsm for known bodies whenever you enter
 a known system.
 
+## Progressbar
+
+Optionally, you can enable a progress bar that will keep track how many
+systems EDSM already knows about and how many yet have to be scanned.
+
 ## Using in your plugin
 
 Make sure that edsmquery is in the EDMarketConnector's plugin folder.
