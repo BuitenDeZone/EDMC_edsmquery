@@ -1,12 +1,13 @@
 """
 Threaded worker to manage edsm queries.
 
-The EDSMQueries helper will run in it's own thread and perform
+The EDSMQueries helper will run in its own thread and perform
 a callback when an item on the queue is processed.
 
 Note: By putting this in a module, EDMC will load us sooner than other plugins.
 """
-from Queue import Queue, Empty
+from queue import Queue, Empty
+
 from threading import Thread, Event
 from requests import Session, HTTPError, ConnectionError
 
@@ -15,19 +16,6 @@ from version import VERSION as PLUGIN_VERSION
 
 
 __version__ = PLUGIN_VERSION
-
-
-def log(max_level, level, prefix, message):
-    """Print a log message.
-
-    :param max_level: max level we want to print
-    :param level: level of the log message
-    :param prefix: prefix to add
-    :param message: the message to print
-    """
-    print_level = LOG_OUTPUT.get(level, 'UNKNOWN')
-    if level <= max_level:
-        print("{prefix}{level}: {message}".format(prefix=prefix, level=print_level, message=message))
 
 
 class EDSMQueries(object):
@@ -62,7 +50,20 @@ class EDSMQueries(object):
         self.logPrefix = "edsmquery > "
 
     def _log(self, level, message):
-        log(self.logLevel, level, self.logPrefix, message)
+        self.log(self.logLevel, level, self.logPrefix, message)
+
+    @staticmethod
+    def log(max_level, level, prefix, message):
+        """Print a log message.
+
+        :param max_level: max level we want to print
+        :param level: level of the log message
+        :param prefix: prefix to add
+        :param message: the message to print
+        """
+        print_level = LOG_OUTPUT.get(level, 'UNKNOWN')
+        if level <= max_level:
+            print("{prefix}{level}: {message}".format(prefix=prefix, level=print_level, message=message))
 
     def _init_thread(self):
         if self.thread is None:
@@ -74,6 +75,8 @@ class EDSMQueries(object):
         """
         Start the thread.
 
+        Parameters
+        ----------
         :param callback_widget: When receiving a result, we need to supply a widget to respond to. This is required
         so further processing can be done on the gui mainloop.
         """
@@ -143,7 +146,7 @@ class EDSMQueries(object):
         """Add a new request to the queue.
 
         :param api: api you want to get
-        :param endpoint: EDSM's api endpoint you want to hit
+        :param endpoint: EDSMs api endpoint you want to hit
         :param method: HTTP method to use.
         :param request_params: additional request parameters.
         """
@@ -154,9 +157,9 @@ class EDSMQueries(object):
         """Perform the http request to edsm.
 
         If performing a get request, the request_params are send as such.
-        If performing a post request, the request_params is used as
+        If performing a post request, the request_params is used as such.
         :param api: api you want to get
-        :param endpoint: EDSM's api endpoint you want to hit
+        :param endpoint: EDSMs api endpoint you want to hit
         :param method: HTTP method to use.
         :param request_params: additional request parameters.
         """
@@ -167,6 +170,8 @@ class EDSMQueries(object):
             session_request = self.session.get(url, params=request_params, timeout=self.API_TIMEOUT)
         elif method == 'POST':
             session_request = self.session.post(url, data=request_params, timeout=self.API_TIMEOUT)
+        else:
+            return
 
         session_request.raise_for_status()
         return session_request.json()
@@ -192,7 +197,7 @@ class EDSMQueries(object):
                 except ConnectionError as err:
                     self._log(LOG_ERROR, "HTTP Connection error: {err}".format(err=err))
                 except HTTPError as err:
-                    self._log(LOG_ERROR, "HTTP error occured: {err}".format(err=err))
+                    self._log(LOG_ERROR, "HTTP error occurred: {err}".format(err=err))
                 retrying += 1
 
             if reply:
