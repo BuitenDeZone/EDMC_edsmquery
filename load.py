@@ -2,15 +2,16 @@
 
 # EDSMQuery
 # ignore the relative imports here. Without them, my IDE does not like these references.
-import ttk
 
 from version import VERSION
-from edsmquery import LOG_DEBUG, LOG_INFO, log as edsmquery_log
-from edsmquery import EDSM_QUERIES, EDSM_CALLBACK_SEQUENCE
+from fields import EDSM_CALLBACK_SEQUENCE
+from fields import LOG_DEBUG, LOG_INFO, LOG_OUTPUT
 from fields import JOURNAL_ENTRY_FIELD_EVENT, JOURNAL_ENTRY_VALUE_EVENT_FSS_DISCOVERY_SCAN, \
     JOURNAL_ENTRY_FIELD_BODY_COUNT, JOURNAL_ENTRY_VALUE_EVENT_SCAN, JOURNAL_ENTRY_FIELD_SCAN_TYPE, \
     JOURNAL_ENTRY_VALUE_SCAN_TYPE_AUTOSCAN, JOURNAL_ENTRY_VALUE_SCAN_TYPE_DETAILED, JOURNAL_ENTRY_FIELD_BODY_NAME, \
     LOG_WARN, EDSM_RESPONSE_FIELD_BODY_COUNT, EDSM_RESPONSE_FIELD_BODIES, EDSM_RESPONSE_FIELD_NAME
+
+from edsmquery.edsmquery import EDSM_QUERIES
 
 # System
 import sys
@@ -22,19 +23,22 @@ from monitor import monitor
 from config import config
 
 # EDMarketConnector: UI
-import Tkinter as tk
 import myNotebook as nb
 
 # L10N
 import l10n
 import functools
 
+# Python 3
+import tkinter as tk
+from tkinter import ttk
+
 _ = functools.partial(l10n.Translations.translate, context=__file__)
 
 this = sys.modules[__name__]  # For holding module globals
 
-LOG_LEVEL = LOG_INFO  # Change this to LOG_DEBUG if you are debugging.
-LOG_PREFIX = "edsmquery: load.py > "
+this.LOG_LEVEL = LOG_INFO  # Change this to LOG_DEBUG if you are debugging.
+this.LOG_PREFIX = "edsmquery: load.py > "
 
 # Configuration keys used. Some are defaulted at plugin startup (if needed) to workaround getint() and unset values.
 CONFIG_KEY_DISABLE_AUTO_SYSTEM_BODIES = 'edsmquery.disable_auto_edsm_system_bodies'
@@ -55,7 +59,14 @@ def log(level, message):
     :param level: Log level of the message
     :param message: The message to print
     """
-    edsmquery_log(LOG_LEVEL, level, LOG_PREFIX, message)
+    print_level = LOG_OUTPUT.get(level, 'UNKNOWN')
+    if level <= this.LOG_LEVEL:
+        print("{prefix}{level}: {message}".format(prefix=this.LOG_PREFIX, level=print_level, message=message))
+
+
+def plugin_start3(plugin_dir):
+    """Python 3 compat."""
+    return plugin_start(plugin_dir)
 
 
 def plugin_start(_plugin_dir):
