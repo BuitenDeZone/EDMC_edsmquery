@@ -45,19 +45,19 @@ CONFIG_KEY_DISABLE_AUTO_SYSTEM_BODIES = 'edsmquery.disable_auto_edsm_system_bodi
 CONFIG_KEY_SHOW_SCAN_PROGRESS = 'edsmquery.show_edsm_bodies_scan_progress'
 CONFIG_KEY_HIDE_COMPLETE_SCAN_PROGRESS = 'edsmquery.hide_scan_progress_if_complete'
 
-# -1: disable, 0: un-initialized, 1: enabled.
+# 0: disable, 1: enabled.
 CONFIG_DEFAULTS = {
-    CONFIG_KEY_DISABLE_AUTO_SYSTEM_BODIES: -1,
-    CONFIG_KEY_SHOW_SCAN_PROGRESS: -1,
-    CONFIG_KEY_HIDE_COMPLETE_SCAN_PROGRESS: 1,
+    CONFIG_KEY_DISABLE_AUTO_SYSTEM_BODIES: False,
+    CONFIG_KEY_SHOW_SCAN_PROGRESS: True,
+    CONFIG_KEY_HIDE_COMPLETE_SCAN_PROGRESS: False,
 }
 
 
 def log(level, message):
     """Print a log message.
 
-    :param level: Log level of the message
-    :param message: The message to print
+    :param level: level of the log message
+    :param message: the message to print
     """
     print_level = LOG_OUTPUT.get(level, 'UNKNOWN')
     if level <= this.LOG_LEVEL:
@@ -85,13 +85,6 @@ def plugin_start(_plugin_dir):
     this.currentSystemBodyCount = 0
     this.currentKnownBodies = []
 
-    # Default configuration.
-    for configkey in CONFIG_DEFAULTS.keys():
-        if config.get(configkey) is None:
-            log(LOG_DEBUG, "Defaulting config key {key} to {value}".format(
-                key=configkey, value=str(CONFIG_DEFAULTS[configkey])))
-            config.set(configkey, str(CONFIG_DEFAULTS[configkey]))
-
     log(LOG_INFO, "{name} (v{version}) initialized.".format(name='edsmquery', version=VERSION))
     return 'edsmquery'
 
@@ -114,12 +107,17 @@ def plugin_app(parent):
     return this.wrapped_parent
 
 
+def config_bool(key: str) -> bool:
+    """Gets a boolean or uses the default"""
+    return config.get_bool(key, default=CONFIG_DEFAULTS[key])
+
+
 def plugin_prefs(parent, _cmdr, _is_beta):
     """Return a Tk Frame for adding to the EDMC settings dialog."""
     # used IntVars for configuration settings.
-    this.disable_auto_edsm_system_bodies = tk.IntVar(value=int(config.get(CONFIG_KEY_DISABLE_AUTO_SYSTEM_BODIES)))
-    this.show_edsm_system_scan_progress = tk.IntVar(value=int(config.get(CONFIG_KEY_SHOW_SCAN_PROGRESS)))
-    this.hide_complete_scan_progress = tk.IntVar(value=int(config.get(CONFIG_KEY_HIDE_COMPLETE_SCAN_PROGRESS)))
+    this.disable_auto_edsm_system_bodies = tk.IntVar(value=config_bool(CONFIG_KEY_DISABLE_AUTO_SYSTEM_BODIES))
+    this.show_edsm_system_scan_progress = tk.IntVar(value=config_bool(CONFIG_KEY_SHOW_SCAN_PROGRESS))
+    this.hide_complete_scan_progress = tk.IntVar(value=config_bool(CONFIG_KEY_HIDE_COMPLETE_SCAN_PROGRESS))
 
     text_show_edsm_system_scan_progress = _("Show EDSM scanned bodies progress for the current system.")
     text_hide_complete_scan_progress = _("Hide the progressbar if all bodies have been scanned.")
@@ -184,7 +182,7 @@ def __initialize_progress_frame(parent):
                          pbarrelief=tk.FLAT,
                          troughrelief=tk.SOLID,
                          troughcolor='black',
-                         background=config.get('dark_text'),
+                         background=config.get_str('dark_text'),
                          )
 
     this.edsm_progress_label = tk.Label(this.progress_frame, text=_("EDSM scanned:"), foreground="white")
@@ -206,13 +204,13 @@ def __initialize_progress_frame(parent):
 
 
 def __update_progress_frame():
-    if config.getint(CONFIG_KEY_SHOW_SCAN_PROGRESS) < 0:
+    if not config_bool(CONFIG_KEY_SHOW_SCAN_PROGRESS):
         this.progress_frame.grid_forget()
     else:
         if this.currentSystemBodyCount == 0:
             this.system_progress.set(0)
             this.system_progress_label.config(text='[?/?]')
-            if int(config.get(CONFIG_KEY_HIDE_COMPLETE_SCAN_PROGRESS)) > 0 and len(this.currentKnownBodies) == 0:
+            if config_bool(CONFIG_KEY_HIDE_COMPLETE_SCAN_PROGRESS) and len(this.currentKnownBodies) == 0:
                 this.progress_frame.grid_forget()
             else:
                 this.progress_frame.grid(columnspan=2, sticky=tk.N + tk.W + tk.E + tk.S)
@@ -223,7 +221,7 @@ def __update_progress_frame():
                 done=len(this.currentKnownBodies),
                 total=this.currentSystemBodyCount,
             )
-            if int(config.get(CONFIG_KEY_HIDE_COMPLETE_SCAN_PROGRESS)) > 0 and progress >= 100:
+            if config_bool(CONFIG_KEY_HIDE_COMPLETE_SCAN_PROGRESS) and progress >= 100:
                 this.progress_frame.grid_forget()
             else:
                 this.progress_frame.grid(columnspan=2, sticky=tk.N + tk.W + tk.E + tk.S)
@@ -307,6 +305,7 @@ def edsm_querier_response_api_system_v1_bodies(request, response):
 
     if need_ui_update:
         __update_progress_frame()
+
 
 #  ___       _                        _
 # |_ _|_ __ | |_ ___ _ __ _ __   __ _| |___
@@ -420,7 +419,7 @@ def edsm_notify_system(reply):
         return
     else:
         this.lastEDSMRequest = monitor.system
-        if int(config.get(CONFIG_KEY_DISABLE_AUTO_SYSTEM_BODIES)) < 0:
+        if not config_bool(CONFIG_KEY_DISABLE_AUTO_SYSTEM_BODIES):
             EDSM_QUERIES.request_get(
                 EDSM_QUERIES.API_SYSTEM_V1,
                 EDSM_QUERIES.API_SYSTEM_V1__BODIES,
