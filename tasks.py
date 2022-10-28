@@ -53,7 +53,11 @@ def lint(ctx, filename=None, envdir=['env', 'venv'], noglob=False):
         command += ' ' + " ".join(templates)
 
     print("Running command: '" + command + "'")
-    exit_status = os.WEXITSTATUS(os.system(command))
+    exit_signal = os.system(command)
+    if os.name == 'nt':
+        exit_status = exit_signal
+    else:
+        exit_status = os.WEXITSTATUS(exit_signal)
     sys.exit(exit_status)
 
 
